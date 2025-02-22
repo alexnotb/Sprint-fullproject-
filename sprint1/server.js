@@ -1,30 +1,27 @@
 const express = require('express');
+const fs = require('fs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const sqlite3 = require('sqlite3').verbose();
 const bodyParser = require('body-parser');
 
 const app = express();
 const port = process.env.PORT || 3000;
 const SECRET_KEY = 'your_secret_key';
+const USERS_FILE = './users.json';
 
 app.use(bodyParser.json());
 
-// Подключение к базе данных SQLite
-const db = new sqlite3.Database('./users.db', (err) => {
-    if (err) {
-        console.error('Ошибка подключения к базе данных:', err.message);
-    } else {
-        console.log('Подключено к базе данных SQLite');
-    }
-});
+// Функция чтения пользователей из файла
+const readUsers = () => {
+    if (!fs.existsSync(USERS_FILE)) return [];
+    const data = fs.readFileSync(USERS_FILE);
+    return JSON.parse(data);
+};
 
-// Создание таблицы пользователей
-db.run(`CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE,
-    password TEXT
-)`);
+// Функция записи пользователей в файл
+const writeUsers = (users) => {
+    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
+};
 
 // Регистрация
 app.post('/register', (req, res) => {
@@ -33,32 +30,36 @@ app.post('/register', (req, res) => {
         return res.status(400).json({ message: 'Введите имя пользователя и пароль' });
     }
 
+    let users = readUsers();
+    if (users.find(user => user.username === username)) {
+        return res.status(400).json({ message: 'Пользователь уже существует' });
+    }
+
     bcrypt.hash(password, 10, (err, hash) => {
         if (err) return res.status(500).json({ message: 'Ошибка хеширования пароля' });
         
-        db.run(`INSERT INTO users (username, password) VALUES (?, ?)`, [username, hash], (err) => {
-            if (err) {
-                return res.status(400).json({ message: 'Пользователь уже существует' });
-            }
-            res.json({ message: 'Регистрация успешна' });
-        });
+        users.push({ id: users.length + 1, username, password: hash });
+        writeUsers(users);
+        res.json({ message: 'Регистрация успешна' });
     });
 });
 
 // Вход
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
-    db.get(`SELECT * FROM users WHERE username = ?`, [username], (err, user) => {
-        if (err || !user) {
-            return res.status(400).json({ message: 'Пользователь не найден' });
+    let users = readUsers();
+    let user = users.find(user => user.username === username);
+    
+    if (!user) {
+        return res.status(400).json({ message: 'Пользователь не найден' });
+    }
+    
+    bcrypt.compare(password, user.password, (err, result) => {
+        if (!result) {
+            return res.status(401).json({ message: 'Неверный пароль' });
         }
-        bcrypt.compare(password, user.password, (err, result) => {
-            if (!result) {
-                return res.status(401).json({ message: 'Неверный пароль' });
-            }
-            const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: '1h' });
-            res.json({ message: 'Вход успешен', token });
-        });
+        const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: '1h' });
+        res.json({ message: 'Вход успешен', token });
     });
 });
 
