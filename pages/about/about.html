@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>О нас – Coffee Bliss</title>
+  <!-- Подключение глобальных стилей (их менять нельзя) -->
+  <link rel="stylesheet" href="/pages/main.css">
+  <style>
+    /* Дополнительные стили для страницы "О нас", не влияющие на глобальные стили */
+    main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+    /* При необходимости можно уточнить стили для карточки с информацией */
+    .card {
+      /* Если нужно задать фиксированную ширину, учтите, что глобальный max-width для .card равен 25rem (400px) */
+      width: 100%;
+      max-width: 28rem; /* 28rem ~ 448px, можно корректировать по необходимости */
+      margin: 0 auto;
+    }
+    /* Адаптивное оформление для карты */
+    .card .map iframe {
+      width: 100%;
+      height: 250px;
+      border: 0;
+      border-radius: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <img src="/image/logo.jpg" alt="Логотип" class="logo">
+      
+      <input type="checkbox" id="nav-toggle">
+      <label for="nav-toggle" class="hamburger-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+
+      <nav class="nav-links">
+        <a href="/pages/home/home.html">HOME</a>
+        <a href="/pages/menu/menu.html">MENU</a>
+      </nav>
+
+      <div class="account-controls">
+        <button type="button" onclick="location.href='/pages/account/login.html';">LOGIN</button>
+        <button type="button" onclick="location.href='/pages/account/logout.html';">SINGIN</button>
+      </div>
+    </div>
+  </header>
+  
+  <main>
+    <div class="card">
+      <h1>О нас</h1>
+      <p>Добро пожаловать в Coffee Bliss – уютную кофейню, где каждая чашка кофе приготовлена с любовью и вниманием к деталям. Мы создаём атмосферу, в которой каждый гость чувствует себя как дома.</p>
+      
+      <h2>Наше местоположение</h2>
+      <p>Мы находимся в самом сердце Москвы по адресу: <strong>ул. Арбат, 12, Москва</strong>. Это удобное место с развитой транспортной сетью. Для быстрого поиска воспользуйтесь <a href="https://www.google.com/maps/place/ул.+Арбат,+12,+Москва" target="_blank">Google Maps</a>.</p>
+      
+      <h2>Режим работы</h2>
+      <ul>
+        <li>Понедельник – Пятница: 08:00 – 20:00</li>
+        <li>Суббота – Воскресенье: 09:00 – 18:00</li>
+      </ul>
+      
+      <h2>Наша история</h2>
+      <p>Coffee Bliss была основана для того, чтобы объединить людей за чашкой отличного кофе. Наши бариста постоянно совершенствуют свои навыки, а каждый напиток проходит строгий контроль качества. Мы стремимся сделать каждое посещение незабываемым.</p>
+      
+      <div class="map">
+        <h2>Найти нас на карте</h2>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2244.466180136476!2d37.585032!3d55.752023!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x414abf22a0ea0c1d%3A0x5cba3d7fc6a0e0b2!2z0JLQvtC70L7Qu9Cw0YDRgdCw0Y8g0KHQvtC80LAgMTIsINCa0YDQtdC70Y8!5e0!3m2!1sru!2sru!4v1610000000000" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+    </div>
+  </main>
+  
+  <footer>
+    <p>Contact: +123456789</p>
+    <p class="email">EXAMPLE@GMAIL.COM</p>
+  </footer>
+</body>
+</html>

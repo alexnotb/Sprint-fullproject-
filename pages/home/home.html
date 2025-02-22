@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Shop</title>
+    <link rel="stylesheet" href="/pages/main.css">
+    <style>
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.container {
+    width: 100%;
+    padding: 0 15px; /* Добавляет отступы, чтобы контент не прилипал к краям */
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0 10px; /* Уменьшаем отступы для меньших экранов */
+    }
+}
+
+    </style>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="content-wrapper">
+      <div class="header-container">
+        <img src="/image/logo.jpg" alt="Логотип" class="logo">
+        
+        <input type="checkbox" id="nav-toggle">
+        <label for="nav-toggle" class="hamburger-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
+    
+        <nav class="nav-links">
+          <a href="/pages/home/home.html">HOME</a>
+          <a href="/pages/menu/menu.html">MENU</a>
+        </nav>
+    
+        <div class="account-controls">
+          <button type="button" onclick="location.href='/pages/login/login.html';">LOGIN</button>
+          <button type="button" onclick="location.href='pages/singup/singup.html';">SIGNIN</button>
+        </div>
+      </div>
+    </div>
+    </div>
+    </header>
+    
+    <main>
+      <div class="desktop-container">
+        <div class="content-wrapper">
+        <div class="container" color: #3d2c1e; >
+            <section class="intro">
+                <div class="card">
+                    <p>"Welcome to our warm coffee shop! Here, every cup of coffee is the result of careful selection of beans and sincere care for our guests. We believe that a fragrant drink can not only invigorate, but also unite, so we strive to create an atmosphere that you want to return to again and again."</p>
+                </div>
+                <img src="/image/coffeeshop.png" alt="Coffee shop interior">
+            </section>
+
+            <section class="menu-info">
+                <img src="/image/3cups.jpg" alt="Coffee drinks">
+                <div class="card">
+                    <p>"Our menu includes classic espresso and cappuccino, as well as signature recipes inspired by the world's best coffee traditions. Enjoy the soft sounds of jazz, immerse yourself in leisurely conversations and give yourself time to enjoy the moment - because a real coffee break begins right here."</p>
+                </div>
+            </section>
+        </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="content-wrapper">
+        <div class="blok">
+          <a class="email" href="mailto:EXAMPLE@GMAIL.COM">EXAMPLE@GMAIL.COM</a>
+          <a class="number" href="tel:+123456789">Contact: +123456789</a>
+        </div>
+      </div>
+  </footer>
+    <script src="/pages/accaunt.js"></script>
+</body>
+</html>
