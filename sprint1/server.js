@@ -1,82 +1,25 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const session = require('express-session');
+const sqlite3 = require('sqlite3').verbose();
 
-const app = express();
-const port = process.env.PORT || 3000;
-
-app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true
-}));
-app.use(bodyParser.json());
-app.use(session({
-  secret: 'secret-key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false, httpOnly: true }
-}));
-
-// Подключение к MongoDB
-mongoose.connect('mongodb://localhost:27017/userDB', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-// Модель пользователя
-const userSchema = new mongoose.Schema({
-  username: String,
-  password: String,
-});
-const User = mongoose.model('User', userSchema);
-
-// Регистрация пользователя
-app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, password: hashedPassword });
-    await user.save();
-    res.status(201).json({ message: 'Пользователь зарегистрирован!' });
-  } catch (error) {
-    res.status(500).json({ message: 'Ошибка регистрации' });
-  }
-});
-
-// Вход пользователя
-app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  try {
-    const user = await User.findOne({ username });
-    if (user && (await bcrypt.compare(password, user.password))) {
-      req.session.user = user._id;
-      res.json({ message: 'Вход успешен!' });
-    } else {
-      res.status(401).json({ message: 'Неверные данные' });
-    }
-  } catch (error) {
-    res.status(500).json({ message: 'Ошибка авторизации' });
-  }
-});
-
-// Проверка сессии
-app.get('/check-auth', (req, res) => {
-  if (req.session.user) {
-    res.json({ authenticated: true });
+// Создаём подключение к базе данных
+const db = new sqlite3.Database('./userDB.db', (err) => {
+  if (err) {
+    console.error('Ошибка подключения к SQLite:', err);
   } else {
-    res.status(401).json({ authenticated: false });
+    console.log('Подключено к SQLite');
   }
 });
 
-// Выход пользователя
-app.post('/logout', (req, res) => {
-  req.session.destroy();
-  res.json({ message: 'Выход выполнен' });
-});
-
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}/`);
+// Создаём таблицу пользователей
+db.run(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL
+  )
+`, (err) => {
+  if (err) {
+    console.error('Ошибка при создании таблицы:', err);
+  } else {
+    console.log('Таблица users создана или уже существует');
+  }
 });
